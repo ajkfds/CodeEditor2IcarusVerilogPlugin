@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -31,10 +32,19 @@ namespace pluginIcarusVerilog
         {
             ContextMenu contextMenu = CodeEditor2.Controller.NavigatePanel.GetContextMenu();
             {
-                MenuItem menuItem_IcarusVerilog = CodeEditor2.Global.CreateMenuItem("IcarusVerilog", "menuItem_IcarusVerilog", "play", Avalonia.Media.Colors.Red);
+                MenuItem menuItem_IcarusVerilog = CodeEditor2.Global.CreateMenuItem(
+                    "IcarusVerilog", "menuItem_IcarusVerilog",
+                    "CodeEditor2/Assets/Icons/play.svg",
+                    Avalonia.Media.Colors.Red
+                    );
                 contextMenu.Items.Add(menuItem_IcarusVerilog);
 
-                MenuItem menuItem_RunSimulation = CodeEditor2.Global.CreateMenuItem("Run Simulation", "menuItem_RunSimulation", "play", Avalonia.Media.Colors.Red);
+                MenuItem menuItem_RunSimulation = CodeEditor2.Global.CreateMenuItem(
+                    "Run Simulation",
+                    "menuItem_RunSimulation",
+                    "CodeEditor2/Assets/Icons/play.svg",
+                    Avalonia.Media.Colors.Red
+                    );
                 menuItem_IcarusVerilog.Items.Add(menuItem_RunSimulation);
                 menuItem_RunSimulation.Click += MenuItem_RunSimulation_Click;
             }
