@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography.X509Certificates;
 
 namespace pluginIcarusVerilog.Views
 {
@@ -25,9 +26,9 @@ namespace pluginIcarusVerilog.Views
 
         private ObservableCollection<ListBoxItem> listItems = new ObservableCollection<ListBoxItem>();
 
-        public void LineReceived(string lineString)
+        public void LineReceived(string lineString, Color? color)
         {
-            appendLog(lineString, null);
+            appendLog(lineString, color);
         }
 
         private void appendLog(string lineString, Color? color)

@@ -13,6 +13,8 @@ namespace pluginIcarusVerilog
         public static string StaticID = "IcarusVerilog";
         public string Id { get { return StaticID; } }
 
+
+        public static Avalonia.Media.Color ThemeColor = Avalonia.Media.Color.FromArgb(255, 150, 50, 50);
         public bool Register()
         {
             if (!CodeEditor2.Global.Plugins.ContainsKey("Verilog")) return false;
@@ -35,7 +37,7 @@ namespace pluginIcarusVerilog
                 MenuItem menuItem_IcarusVerilog = CodeEditor2.Global.CreateMenuItem(
                     "IcarusVerilog", "menuItem_IcarusVerilog",
                     "CodeEditor2/Assets/Icons/play.svg",
-                    Avalonia.Media.Colors.Red
+                    ThemeColor
                     );
                 contextMenu.Items.Add(menuItem_IcarusVerilog);
 
@@ -43,8 +45,8 @@ namespace pluginIcarusVerilog
                     "Run Simulation",
                     "menuItem_RunSimulation",
                     "CodeEditor2/Assets/Icons/play.svg",
-                    Avalonia.Media.Colors.Red
-                    );
+                    ThemeColor
+                    ); ;
                 menuItem_IcarusVerilog.Items.Add(menuItem_RunSimulation);
                 menuItem_RunSimulation.Click += MenuItem_RunSimulation_Click;
             }

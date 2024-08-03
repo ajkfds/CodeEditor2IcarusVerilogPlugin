@@ -25,18 +25,19 @@ namespace pluginIcarusVerilog.Views
             Content = SimPanel;
         }
 
+        private const string prompt = "icarusVerilogShell";
         public static SimulationTab? Create()
         {
             CodeEditor2.Data.File? file;
             file = CodeEditor2.Controller.NavigatePanel.GetSelectedFile();
 
-            pluginVerilog.Data.VerilogFile? vfile = file as pluginVerilog.Data.VerilogFile;
-            if (vfile == null) return null;
+            pluginVerilog.Data.VerilogFile? vFile = file as pluginVerilog.Data.VerilogFile;
+            if (vFile == null) return null;
 
-            pluginVerilog.Data.SimulationSetup? simulationSetup = pluginVerilog.Data.SimulationSetup.Create(vfile);
+            pluginVerilog.Data.SimulationSetup? simulationSetup = pluginVerilog.Data.SimulationSetup.Create(vFile);
             if (simulationSetup == null) return null;
 
-            SimulationTab tab = new SimulationTab(simulationSetup.TopName,"play",Colors.Red,true);
+            SimulationTab tab = new SimulationTab(simulationSetup.TopName,"play",Plugin.ThemeColor,true);
             tab.SimulationSetup = simulationSetup;
 
             tab.CloseButton_Clicked += new Action(() => { tab.Close(); });
@@ -89,7 +90,7 @@ namespace pluginIcarusVerilog.Views
             }
 
             shell = new CodeEditor2.Shells.WinCmdChell(new List<string> {
-                "prompt icarusVerilogShell$G$_",
+                "prompt "+prompt+"$G$_",
                 "cd "+simulationPath
             });
 
@@ -97,7 +98,7 @@ namespace pluginIcarusVerilog.Views
             shell.Start();
 
             await Task.Delay(1, token);
-            while (shell.GetLastLine() != "icarusVerilogShell>")
+            while (shell.GetLastLine() != prompt+">")
             {
                 await Task.Delay(10, token);
                 if (token.IsCancellationRequested) return;
@@ -106,7 +107,7 @@ namespace pluginIcarusVerilog.Views
             shell.StartLogging();
             shell.Execute(Setup.BinPath + "iverilog -f command -o " + simName + ".o");
             await Task.Delay(1, token);
-            while (shell.GetLastLine() != "icarusVerilogShell>")
+            while (shell.GetLastLine() != prompt+">")
             {
                 await Task.Delay(10, token);
                 if (token.IsCancellationRequested) return;
@@ -121,7 +122,14 @@ namespace pluginIcarusVerilog.Views
         }
         private void Shell_LineReceived(string lineString)
         {
-            SimPanel.LineReceived(lineString);
+            if(lineString == prompt + ">")
+            {
+                SimPanel.LineReceived(lineString, Colors.Green);
+            }
+            else
+            {
+                SimPanel.LineReceived(lineString,null);
+            }
         }
     }
 }
