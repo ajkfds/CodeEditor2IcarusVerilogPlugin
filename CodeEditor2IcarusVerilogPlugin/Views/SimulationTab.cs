@@ -47,7 +47,7 @@ namespace pluginIcarusVerilog.Views
 
         public SimPanel SimPanel;
         protected pluginVerilog.Data.SimulationSetup? SimulationSetup;
-        protected CodeEditor2.Shells.WinCmdChell shell;
+        protected CodeEditor2.Shells.WinCmdShell shell;
         private CancellationTokenSource tokenSource = new CancellationTokenSource();
 
         private void Close()
@@ -89,7 +89,7 @@ namespace pluginIcarusVerilog.Views
                 }
             }
 
-            shell = new CodeEditor2.Shells.WinCmdChell(new List<string> {
+            shell = new CodeEditor2.Shells.WinCmdShell(new List<string> {
                 "prompt "+prompt+"$G$_",
                 "cd "+simulationPath
             });
