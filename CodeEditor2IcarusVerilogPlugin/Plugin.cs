@@ -32,31 +32,30 @@ namespace pluginIcarusVerilog
 
         public bool Initialize()
         {
-            ContextMenu contextMenu = CodeEditor2.Controller.NavigatePanel.GetContextMenu();
-            {
-                MenuItem menuItem_IcarusVerilog = CodeEditor2.Global.CreateMenuItem(
-                    "IcarusVerilog", "menuItem_IcarusVerilog",
-                    "CodeEditor2/Assets/Icons/play.svg",
-                    ThemeColor
-                    );
-                contextMenu.Items.Add(menuItem_IcarusVerilog);
-
-                MenuItem menuItem_RunSimulation = CodeEditor2.Global.CreateMenuItem(
-                    "Run Simulation",
-                    "menuItem_RunSimulation",
-                    "CodeEditor2/Assets/Icons/play.svg",
-                    ThemeColor
-                    ); ;
-                menuItem_IcarusVerilog.Items.Add(menuItem_RunSimulation);
-                menuItem_RunSimulation.Click += MenuItem_RunSimulation_Click;
-            }
-            // register project property form tab
-            //            CodeEditor.Tools.ProjectPropertyForm.FormCreated += Tools.ProjectPropertyTab.ProjectPropertyFromCreated;
-
+            pluginVerilog.NavigatePanel.VerilogFileNode.CustomizeNavigateNodeContextMenu += CustomizeNavigateNodeContextMenuHandler;
             return true;
         }
 
-        private void MenuItem_RunSimulation_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+        // Attached to VerilogFileNode context menu
+        public static void CustomizeNavigateNodeContextMenuHandler(Avalonia.Controls.ContextMenu contextMenu)
+        {
+            MenuItem menuItem_IcarusVerilog = CodeEditor2.Global.CreateMenuItem(
+                "IcarusVerilog", "menuItem_IcarusVerilog",
+                "CodeEditor2/Assets/Icons/play.svg",
+                ThemeColor
+                );
+            contextMenu.Items.Add(menuItem_IcarusVerilog);
+            MenuItem menuItem_RunSimulation = CodeEditor2.Global.CreateMenuItem(
+                "Run Simulation",
+                "menuItem_RunSimulation",
+                "CodeEditor2/Assets/Icons/play.svg",
+                ThemeColor
+                ); ;
+            menuItem_IcarusVerilog.Items.Add(menuItem_RunSimulation);
+            menuItem_RunSimulation.Click += MenuItem_RunSimulation_Click;
+        }
+
+        private static void MenuItem_RunSimulation_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
             Views.SimulationTab? tab = Views.SimulationTab.Create();
             if (tab == null) return;
