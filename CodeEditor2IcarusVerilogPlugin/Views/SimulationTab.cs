@@ -91,6 +91,7 @@ namespace pluginIcarusVerilog.Views
 
             shell = new CodeEditor2.Shells.WinCmdShell(new List<string> {
                 "prompt "+prompt+"$G$_",
+                simulationPath.Substring(0,2),
                 "cd "+simulationPath
             });
 
@@ -105,7 +106,12 @@ namespace pluginIcarusVerilog.Views
             }
             shell.ClearLogs();
             shell.StartLogging();
-            shell.Execute(Setup.BinPath + "iverilog -f command -o " + simName + ".o");
+            await Task.Delay(1, token);
+            shell.Execute("dir");
+            await Task.Delay(1, token);
+            shell.Execute("type command");
+            await Task.Delay(1, token);
+            shell.Execute(Setup.BinPath + "iverilog -g2012 -v -Wall -s "+simName+" -f command -o "+simName+".o");
             await Task.Delay(1, token);
             while (shell.GetLastLine() != prompt+">")
             {
