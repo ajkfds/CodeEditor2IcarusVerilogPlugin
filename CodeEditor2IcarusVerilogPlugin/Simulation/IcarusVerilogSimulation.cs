@@ -61,11 +61,12 @@ namespace pluginIcarusVerilog.Simulation
                 await Task.Delay(10, cancellationToken);
                 if (cancellationToken.IsCancellationRequested) return "simulation canceled.";
             }
+            await Task.Delay(1, cancellationToken);
+            shell.Execute("del " + simName + ".o");
             shell.ClearLogs();
             shell.StartLogging();
-            await Task.Delay(1, cancellationToken);
-            shell.Execute("dir");
-            await Task.Delay(1, cancellationToken);
+//            await Task.Delay(1, cancellationToken);
+//            shell.Execute("dir");
             shell.Execute(Setup.BinPath + "iverilog -g2012 -f command -o "+simName+".o");
             await Task.Delay(1, cancellationToken);
             while (shell.GetLastLine() != prompt + ">")
@@ -73,8 +74,8 @@ namespace pluginIcarusVerilog.Simulation
                 await Task.Delay(10, cancellationToken);
                 if (cancellationToken.IsCancellationRequested) return "simulation canceled.";
             }
-            shell.ClearLogs();
-            shell.StartLogging();
+//            shell.ClearLogs();
+//            shell.StartLogging();
             shell.Execute(Setup.BinPath + "vvp " + simName + ".o");
             while (shell.GetLastLine() != prompt + ">")
             {
