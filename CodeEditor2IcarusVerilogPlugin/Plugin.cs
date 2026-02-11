@@ -64,7 +64,7 @@ namespace pluginIcarusVerilog
             if (vFile == null) return;
 
             Simulation.IcarusVerilogSimulation icarusVerilogSimulation = new Simulation.IcarusVerilogSimulation();
-            icarusVerilogSimulation.TopFile = vFile;
+            icarusVerilogSimulation.File = vFile;
 
 
             Views.SimulationTab? tab = Views.SimulationTab.Create(icarusVerilogSimulation);

@@ -26,7 +26,7 @@ namespace pluginIcarusVerilog.Views
         }
 
         private const string prompt = "icarusVerilogShell";
-        public static SimulationTab? Create(pluginVerilog.Tool.ISimulation simulation)
+        public static SimulationTab? Create(CodeEditor2.Tests.ITest simulation)
         {
             CodeEditor2.Data.File? file;
             file = CodeEditor2.Controller.NavigatePanel.GetSelectedFile();
@@ -46,7 +46,7 @@ namespace pluginIcarusVerilog.Views
             return tab;
         }
 
-        private pluginVerilog.Tool.ISimulation Simulation;
+        private CodeEditor2.Tests.ITest Simulation;
         public SimPanel SimPanel;
         protected pluginVerilog.Data.SimulationSetup? SimulationSetup;
         protected CodeEditor2.Shells.WinCmdShell shell;
