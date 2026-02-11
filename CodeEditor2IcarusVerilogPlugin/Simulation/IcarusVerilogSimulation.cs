@@ -1,4 +1,5 @@
 ﻿using CodeEditor2.Shells;
+using CodeEditor2.Tests;
 using pluginIcarusVerilog.Views;
 using pluginVerilog.Data;
 using System;
@@ -10,15 +11,17 @@ using System.Threading.Tasks;
 
 namespace pluginIcarusVerilog.Simulation
 {
-    public class IcarusVerilogSimulation : pluginVerilog.Tool.ISimulation
+    public class IcarusVerilogSimulation : CodeEditor2.Tests.ITest
     {
-        public VerilogFile? TopFile { get; set; } = null;
+        public CodeEditor2.Data.File? File { get; set; } = null;
         protected CodeEditor2.Shells.WinCmdShell? shell;
         private const string prompt = "icarusVerilogShell";
 
+        public Action<string, Avalonia.Media.Color?>? LogReceived { get; set; } = null;
+
         public async Task<string> RunSimulationAsync(CancellationToken cancellationToken)
         {
-            pluginVerilog.Data.VerilogFile? vFile = TopFile;
+            pluginVerilog.Data.VerilogFile? vFile = File as pluginVerilog.Data.VerilogFile;
             if (vFile == null) return "failed to launch simulation.";
 
             pluginVerilog.Data.SimulationSetup? simulationSetup = pluginVerilog.Data.SimulationSetup.Create(vFile);
@@ -54,6 +57,7 @@ namespace pluginIcarusVerilog.Simulation
             });
 
             shell.Start();
+            shell.LineReceived += Shell_LineReceived;
 
             await Task.Delay(1, cancellationToken);
             while (shell.GetLastLine() != prompt + ">")
@@ -90,6 +94,25 @@ namespace pluginIcarusVerilog.Simulation
                 sb.Append("\n");
             }
             return sb.ToString();
+        }
+
+        private void Shell_LineReceived(string lineString)
+        {
+            if (lineString == prompt + ">")
+            {
+                if(LogReceived  != null) LogReceived(lineString, Avalonia.Media.Colors.Green);
+            }
+            else
+            {
+                if (LogReceived != null) LogReceived(lineString, null);
+            }
+        }
+
+        public Task<TestResult> GetSimulationResultAsync(CancellationToken cancellationToken)
+        {
+            CodeEditor2.Tests.TestResult result = new TestResult();
+            result.Status = TestResult.TestStatus.NoResult;
+            return Task.FromResult(result);
         }
     }
 }
