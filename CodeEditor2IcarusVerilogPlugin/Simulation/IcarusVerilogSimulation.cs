@@ -24,6 +24,8 @@ namespace pluginIcarusVerilog.Simulation
             pluginVerilog.Data.VerilogFile? vFile = File as pluginVerilog.Data.VerilogFile;
             if (vFile == null) return "failed to launch simulation.";
 
+            await vFile.ParseHierarchyAsync((file) => { return; });
+
             pluginVerilog.Data.SimulationSetup? simulationSetup = pluginVerilog.Data.SimulationSetup.Create(vFile);
             if (simulationSetup == null) return "failed to launch simulation.";
 
