@@ -1,4 +1,4 @@
-﻿namespace CodeEditor2IcarusVerilogPlugin.ViewModels;
+namespace CodeEditor2IcarusVerilogPlugin.ViewModels;
 
 public class MainViewModel : ViewModelBase
 {

@@ -1,4 +1,4 @@
-﻿using CodeEditor2.Shells;
+using CodeEditor2.Shells;
 using CodeEditor2.Tests;
 using pluginIcarusVerilog.Views;
 using pluginVerilog.Data;
