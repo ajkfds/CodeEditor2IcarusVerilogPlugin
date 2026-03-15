@@ -19,10 +19,11 @@ namespace pluginIcarusVerilog.Views
 {
     internal class SimulationTab : CodeEditor2.Views.CodeTabItem
     {
-        protected SimulationTab(string title, string ? iconName, Avalonia.Media.Color ? iconColor, bool closeButtonEnable) :base(title,iconName,iconColor,closeButtonEnable)
+        protected SimulationTab(string title, string ? iconName, Avalonia.Media.Color ? iconColor, bool closeButtonEnable, CodeEditor2.Tests.ITest simulation) :base(title,iconName,iconColor,closeButtonEnable)
         {
             SimPanel = new SimPanel();
             Content = SimPanel;
+            Simulation = simulation;
         }
 
         private const string prompt = "icarusVerilogShell";
@@ -37,11 +38,10 @@ namespace pluginIcarusVerilog.Views
             pluginVerilog.Data.SimulationSetup? simulationSetup = pluginVerilog.Data.SimulationSetup.Create(vFile);
             if (simulationSetup == null) return null;
 
-            SimulationTab tab = new SimulationTab(simulationSetup.TopName,"play",Plugin.ThemeColor,true);
+            SimulationTab tab = new SimulationTab(simulationSetup.TopName,"play",Plugin.ThemeColor,true,simulation);
             tab.SimulationSetup = simulationSetup;
 
             tab.CloseButton_Clicked += new Action(() => { tab.Close(); });
-            tab.Simulation = simulation;
 
             return tab;
         }
