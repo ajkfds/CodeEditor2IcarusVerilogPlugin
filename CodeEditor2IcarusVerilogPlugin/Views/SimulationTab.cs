@@ -49,7 +49,7 @@ namespace pluginIcarusVerilog.Views
         private CodeEditor2.Tests.ITest Simulation;
         public SimPanel SimPanel;
         protected pluginVerilog.Data.SimulationSetup? SimulationSetup;
-        protected CodeEditor2.Shells.WinCmdShell shell;
+        protected CodeEditor2.Shells.WinCmdShell? shell;
         private CancellationTokenSource tokenSource = new CancellationTokenSource();
 
         private void Close()
