@@ -37,6 +37,33 @@ namespace pluginIcarusVerilog.Views
 
             pluginVerilog.Data.SimulationSetup? simulationSetup = pluginVerilog.Data.SimulationSetup.Create(vFile);
             if (simulationSetup == null) return null;
+            return createTab(simulation, simulationSetup);
+        }
+
+        // Async creation: the SimulationSetup creation (hierarchy walk /
+        // class dependency resolution) is heavy and must not run on the UI
+        // thread. Running it on the UI thread freezes the whole application
+        // (and blocks background threads that synchronously Invoke to the UI
+        // thread, resulting in a deadlock-like freeze).
+        public static async Task<SimulationTab?> CreateAsync(CodeEditor2.Tests.ITest simulation)
+        {
+            CodeEditor2.Data.File? file;
+            file = CodeEditor2.Controller.NavigatePanel.GetSelectedFile();
+
+            pluginVerilog.Data.VerilogFile? vFile = file as pluginVerilog.Data.VerilogFile;
+            if (vFile == null) return null;
+
+            pluginVerilog.Data.SimulationSetup? simulationSetup =
+                await System.Threading.Tasks.Task.Run(
+                    async () => await pluginVerilog.Data.SimulationSetup.CreateAsync(vFile)
+                    );
+            if (simulationSetup == null) return null;
+
+            return await Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() => createTab(simulation, simulationSetup));
+        }
+
+        private static SimulationTab? createTab(CodeEditor2.Tests.ITest simulation, pluginVerilog.Data.SimulationSetup simulationSetup)
+        {
 
             SimulationTab tab = new SimulationTab(simulationSetup.TopName,"play",Plugin.ThemeColor,true,simulation);
             tab.SimulationSetup = simulationSetup;
@@ -66,7 +93,11 @@ namespace pluginIcarusVerilog.Views
         private async Task work(CancellationToken token)
         {
             Simulation.LogReceived += LogReceived;
-            await Simulation.RunSimulationAsync(token);
+            // run the simulation work off the UI thread (it re-creates a
+            // SimulationSetup and waits for shell prompts synchronously)
+            await System.Threading.Tasks.Task.Run(
+                async () => await Simulation.RunSimulationAsync(token)
+                );
         }
         private void LogReceived(string lineString,Avalonia.Media.Color? color)
         {

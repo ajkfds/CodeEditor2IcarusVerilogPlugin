@@ -55,7 +55,7 @@ namespace pluginIcarusVerilog
             menuItem_RunSimulation.Click += MenuItem_RunSimulation_Click;
         }
 
-        private static void MenuItem_RunSimulation_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+        private static async void MenuItem_RunSimulation_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
             CodeEditor2.Data.File? file;
             file = CodeEditor2.Controller.NavigatePanel.GetSelectedFile();
@@ -67,7 +67,8 @@ namespace pluginIcarusVerilog
             icarusVerilogSimulation.File = vFile;
 
 
-            Views.SimulationTab? tab = Views.SimulationTab.Create(icarusVerilogSimulation);
+            // heavy SimulationSetup creation runs off the UI thread
+            Views.SimulationTab? tab = await Views.SimulationTab.CreateAsync(icarusVerilogSimulation);
             if (tab == null) return;
             CodeEditor2.Controller.Tabs.AddItem(tab);
             tab.Run();
