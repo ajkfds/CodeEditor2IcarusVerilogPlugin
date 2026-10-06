@@ -4,7 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="400"
              x:Class="pluginIcarusVerilog.Views.SimPanel">
-	<ListBox Name="ListBox0" FontSize="8" FontFamily="Consolas">
+	<!-- ClipToBounds: prevent out-of-bounds items from overpainting the tab header -->
+	<ListBox Name="ListBox0" FontSize="8" FontFamily="Consolas" ClipToBounds="True">
 		<ListBox.Styles>
 			<Style Selector="ListBoxItem">
 				<Setter Property="Height" Value="12"/>
