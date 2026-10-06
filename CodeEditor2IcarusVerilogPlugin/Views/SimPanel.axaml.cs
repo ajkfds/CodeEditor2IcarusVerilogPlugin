@@ -1,17 +1,8 @@
-using AjkAvaloniaLibs.Controls;
 using Avalonia.Controls;
-using Avalonia.Controls.Presenters;
-using Avalonia.Layout;
 using Avalonia.Media;
-using Avalonia.Styling;
 using Avalonia.Threading;
-using CodeEditor2.NavigatePanel;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Security.Cryptography.X509Certificates;
 
 namespace pluginIcarusVerilog.Views
 {
@@ -21,7 +12,7 @@ namespace pluginIcarusVerilog.Views
         {
             InitializeComponent();
 
-            ListBox0.ItemsSource = listItems;
+            ItemsControl0.ItemsSource = listItems;
         }
 
         private ObservableCollection<ListBoxItem> listItems = new ObservableCollection<ListBoxItem>();
@@ -41,26 +32,33 @@ namespace pluginIcarusVerilog.Views
                         textBlock.FontSize = 10;
                         textBlock.Height = 11;
                         textBlock.MinHeight = 11;
+                        textBlock.Margin = new Avalonia.Thickness(2, 0, 0, 0);
                         if (color != null)
                         {
                             textBlock.Foreground = new SolidColorBrush((Color)color);
                         }
-                        textBlock.Margin = new Avalonia.Thickness(0, 0, 0, 0);
+
                         lock (listItems)
                         {
-                            ListBoxItem item = new ListBoxItem();
-                            item.Content = textBlock;
-                            listItems.Add(item);
+                            listItems.Add(new ListBoxItem()
+                            {
+                                Content = textBlock,
+                                Padding = new Avalonia.Thickness(0),
+                                Margin = new Avalonia.Thickness(0),
+                                MinHeight = 11
+                            });
+
                             if (listItems.Count > 1000)
                             {
-                                ListBoxItem? removeItem = listItems[0] as ListBoxItem;
-                                if (removeItem == null) return;
-                                listItems.Remove(removeItem);
+                                listItems.RemoveAt(0);
                             }
-                            listItems.Last().IsSelected = true;
-                            ListBox0.ScrollIntoView(listItems.Last());
                         }
-                        ListBox0.InvalidateVisual();
+
+                        // auto scroll to bottom
+                        Dispatcher.UIThread.Post(() =>
+                        {
+                            ScrollViewer0.ScrollToEnd();
+                        });
                     })
                 );
         }

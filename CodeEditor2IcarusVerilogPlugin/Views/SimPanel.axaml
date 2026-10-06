@@ -4,17 +4,17 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="400"
              x:Class="pluginIcarusVerilog.Views.SimPanel">
-	<!-- ClipToBounds: prevent out-of-bounds items from overpainting the tab header -->
-	<ListBox Name="ListBox0" FontSize="8" FontFamily="Consolas" ClipToBounds="True">
-		<ListBox.Styles>
-			<Style Selector="ListBoxItem">
-				<Setter Property="Height" Value="12"/>
-				<Setter Property="MinHeight" Value="8"/>
-				<Setter Property="FontSize" Value="11"/>
-				<Setter Property="Margin" Value="0 0 0 0"/>
-				<Setter Property="Padding" Value="0 0 0 0"/>
-				<Setter Property="VerticalAlignment" Value="Center"/>
-			</Style>
-		</ListBox.Styles>
-	</ListBox>
+	<!-- ScrollViewer + ItemsControl: no selection / ScrollIntoView. BringIntoView propagation
+	     from a ListBox can paint items over the tab header area, so avoid ListBox entirely. -->
+	<ScrollViewer Name="ScrollViewer0" ClipToBounds="True"
+	              HorizontalScrollBarVisibility="Disabled"
+	              VerticalScrollBarVisibility="Auto">
+		<ItemsControl Name="ItemsControl0" FontFamily="Consolas">
+			<ItemsControl.ItemsPanel>
+				<ItemsPanelTemplate>
+					<StackPanel Orientation="Vertical"/>
+				</ItemsPanelTemplate>
+			</ItemsControl.ItemsPanel>
+		</ItemsControl>
+	</ScrollViewer>
 </UserControl>
