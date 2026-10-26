@@ -42,13 +42,18 @@ namespace pluginIcarusVerilog.Simulation
 
             using (System.IO.StreamWriter sw = new System.IO.StreamWriter(simulationPath + "\\command"))
             {
-                foreach (string includePath in simulationSetup.IncludePaths)
+                // GetAllFiles / GetAllIncludePaths include the externally
+                // referenced projects (parameterized "@project" instances);
+                // enumerating only this project's Files silently dropped them.
+                foreach (string includePath in simulationSetup.GetAllIncludePaths())
                 {
                     sw.WriteLine("+incdir+" + includePath); // path with space is not accepted
                 }
-                foreach (CodeEditor2.Data.File file in simulationSetup.Files)
+                foreach (pluginVerilog.Data.IVerilogRelatedFile file in simulationSetup.GetAllFiles())
                 {
-                    sw.WriteLine(simulationSetup.Project.GetAbsolutePath(file.RelativePath));
+                    string? absolutePath = pluginVerilog.Data.SimulationSetup.GetAbsolutePath(file);
+                    if (absolutePath == null) continue;
+                    sw.WriteLine(absolutePath);
                 }
             }
 
