@@ -45,16 +45,16 @@ namespace pluginIcarusVerilog.Simulation
                 // GetAllFiles / GetAllIncludePaths include the externally
                 // referenced projects (parameterized "@project" instances);
                 // enumerating only this project's Files silently dropped them.
-                foreach (string includePath in simulationSetup.GetAllIncludePaths())
-                {
-                    sw.WriteLine("+incdir+" + includePath); // path with space is not accepted
-                }
-                foreach (pluginVerilog.Data.IVerilogRelatedFile file in simulationSetup.GetAllFiles())
-                {
-                    string? absolutePath = pluginVerilog.Data.SimulationSetup.GetAbsolutePath(file);
-                    if (absolutePath == null) continue;
-                    sw.WriteLine(absolutePath);
-                }
+                //foreach (string includePath in simulationSetup.GetAllIncludePaths())
+                //{
+                //    sw.WriteLine("+incdir+" + includePath); // path with space is not accepted
+                //}
+                //foreach (pluginVerilog.Data.IVerilogRelatedFile file in simulationSetup.GetAllFiles())
+                //{
+                //    string? absolutePath = pluginVerilog.Data.SimulationSetup.GetAbsolutePath(file);
+                //    if (absolutePath == null) continue;
+                //    sw.WriteLine(absolutePath);
+                //}
             }
 
             shell = new CodeEditor2.Shells.WinCmdShell(new List<string> {
