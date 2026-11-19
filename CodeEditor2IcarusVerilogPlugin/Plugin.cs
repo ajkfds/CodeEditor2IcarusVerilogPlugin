@@ -30,38 +30,74 @@ namespace pluginIcarusVerilog
 //            project.ProjectProperties.Add(Id, new ProjectProperty(project));
         }
 
+        /// <summary>
+        /// Id of the "IcarusVerilog" grouping row in the shared node menu.
+        /// </summary>
+        public const string MenuGroupId = "icarusVerilog";
+
+        /// <summary>Id of the "Run Simulation" row inside that group.</summary>
+        public const string MenuRunSimulationId = "icarusRunSimulation";
+
         public bool Initialize()
         {
-            pluginVerilog.NavigatePanel.VerilogFileNode.CustomizeNavigateNodeContextMenu += CustomizeNavigateNodeContextMenuHandler;
+            // The menu row is a catalog entry now, not a ContextMenu subscription:
+            // the editor and VS Code then share one declaration, and the row can
+            // carry the condition under which it makes sense (see Available).
+            pluginVerilog.CoreBridge.HierarchyMenuCatalog.Register(new pluginVerilog.CoreBridge.HierarchyMenuCatalog.Entry
+            {
+                Id = MenuGroupId,
+                Label = "IcarusVerilog",
+                Detail = "Icarus Verilog simulation",
+                Targets = pluginVerilog.CoreBridge.HierarchyMenuCatalog.AppliesTo.File,
+                // The simulation tab and its dialogs exist only in the editor.
+                Hosts = pluginVerilog.CoreBridge.HierarchyMenuCatalog.Hosts.Desktop,
+                Group = 30,
+                IconPath = "CodeEditor2/Assets/Icons/play.svg",
+                IconColor = PackColor(ThemeColor),
+                Children =
+                {
+                    new pluginVerilog.CoreBridge.HierarchyMenuCatalog.Entry
+                    {
+                        Id = MenuRunSimulationId,
+                        Label = "Run Simulation",
+                        Detail = "compile and run the hierarchy with Icarus Verilog",
+                        Targets = pluginVerilog.CoreBridge.HierarchyMenuCatalog.AppliesTo.File,
+                        Hosts = pluginVerilog.CoreBridge.HierarchyMenuCatalog.Hosts.Desktop,
+                        Group = 10,
+                        IconPath = "CodeEditor2/Assets/Icons/play.svg",
+                        IconColor = PackColor(ThemeColor),
+                        Action = pluginVerilog.CoreBridge.HierarchyMenuCatalog.ActionKind.DesktopHandler,
+                        // Only offered when this plugin is actually loaded: the
+                        // row cannot work otherwise, and the catalog is static
+                        // data that cannot tell on its own.
+                        Available = () => CodeEditor2.Global.Plugins.ContainsKey(StaticID),
+                        Handler = RunSimulation,
+                    },
+                },
+            });
             return true;
         }
 
-        // Attached to VerilogFileNode context menu
-        public static void CustomizeNavigateNodeContextMenuHandler(Avalonia.Controls.ContextMenu contextMenu)
+        /// <summary>Packs an Avalonia colour into the catalog's 0xAARRGGBB form.</summary>
+        private static uint PackColor(Avalonia.Media.Color color)
         {
-            MenuItem menuItem_IcarusVerilog = CodeEditor2.Global.CreateMenuItem(
-                "IcarusVerilog", "menuItem_IcarusVerilog",
-                "CodeEditor2/Assets/Icons/play.svg",
-                ThemeColor
-                );
-            contextMenu.Items.Add(menuItem_IcarusVerilog);
-            MenuItem menuItem_RunSimulation = CodeEditor2.Global.CreateMenuItem(
-                "Run Simulation",
-                "menuItem_RunSimulation",
-                "CodeEditor2/Assets/Icons/play.svg",
-                ThemeColor
-                ); ;
-            menuItem_IcarusVerilog.Items.Add(menuItem_RunSimulation);
-            menuItem_RunSimulation.Click += MenuItem_RunSimulation_Click;
+            return ((uint)color.A << 24) | ((uint)color.R << 16) | ((uint)color.G << 8) | color.B;
         }
 
-        private static async void MenuItem_RunSimulation_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+        /// <summary>
+        /// Runs the simulation for the node the menu was opened on. The context
+        /// carries that node, so this does not depend on the current selection
+        /// (which may have moved while the menu was open).
+        /// </summary>
+        private static void RunSimulation(pluginVerilog.CoreBridge.NavigateNodeMenuContext context)
         {
-            CodeEditor2.Data.File? file;
-            file = CodeEditor2.Controller.NavigatePanel.GetSelectedFile();
-
-            pluginVerilog.Data.VerilogFile? vFile = file as pluginVerilog.Data.VerilogFile;
+            pluginVerilog.Data.VerilogFile? vFile = context.File as pluginVerilog.Data.VerilogFile;
             if (vFile == null) return;
+            _ = RunSimulationAsync(vFile);
+        }
+
+        private static async System.Threading.Tasks.Task RunSimulationAsync(pluginVerilog.Data.VerilogFile vFile)
+        {
 
             Simulation.IcarusVerilogSimulation icarusVerilogSimulation = new Simulation.IcarusVerilogSimulation();
             icarusVerilogSimulation.File = vFile;
