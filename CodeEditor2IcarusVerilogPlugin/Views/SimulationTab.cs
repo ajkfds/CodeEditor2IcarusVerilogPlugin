@@ -1,7 +1,8 @@
 using CodeEditor2.Data;
 using CodeEditor2.Shells;
-using pluginVerilog.Verilog.BuildingBlocks;
-using pluginVerilog.Verilog.DataObjects;
+// The parser moved to the UI-free assembly; these types now live there.
+using SystemVerilogCore.Verilog.BuildingBlocks;
+using SystemVerilogCore.Verilog.DataObjects;
 using pluginVerilog;
 using System;
 using System.Collections.Generic;
