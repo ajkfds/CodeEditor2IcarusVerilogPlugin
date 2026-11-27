@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
@@ -33,5 +33,9 @@
     <ProjectReference Include="..\..\CodeEditor2Plugin\CodeEditor2Plugin\CodeEditor2Plugin\CodeEditor2Plugin.csproj" />
     <ProjectReference Include="..\..\CodeEditor2VerilogPlugin\CodeEditor2VerilogPlugin\CodeEditor2VerilogPlugin.csproj" />
     <ProjectReference Include="..\..\CodeEditor2\CodeEditor2\CodeEditor2.csproj" />
+    <!-- The hierarchy node menu catalog / builder moved to the UI-free assembly
+         (SystemVerilogCore.Menus), so the rows this plugin registers - and the
+         context type its handler receives - live there now. -->
+    <ProjectReference Include="..\..\SystemVerilogCore\SystemVerilogCore\SystemVerilogCore.csproj" />
   </ItemGroup>
 </Project>

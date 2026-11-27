@@ -43,30 +43,30 @@ namespace pluginIcarusVerilog
             // The menu row is a catalog entry now, not a ContextMenu subscription:
             // the editor and VS Code then share one declaration, and the row can
             // carry the condition under which it makes sense (see Available).
-            pluginVerilog.CoreBridge.HierarchyMenuCatalog.Register(new pluginVerilog.CoreBridge.HierarchyMenuCatalog.Entry
+            SystemVerilogCore.Menus.HierarchyMenuCatalog.Register(new SystemVerilogCore.Menus.HierarchyMenuCatalog.Entry
             {
                 Id = MenuGroupId,
                 Label = "IcarusVerilog",
                 Detail = "Icarus Verilog simulation",
-                Targets = pluginVerilog.CoreBridge.HierarchyMenuCatalog.AppliesTo.File,
+                Targets = SystemVerilogCore.Menus.HierarchyMenuCatalog.AppliesTo.File,
                 // The simulation tab and its dialogs exist only in the editor.
-                Hosts = pluginVerilog.CoreBridge.HierarchyMenuCatalog.Hosts.Desktop,
+                Hosts = SystemVerilogCore.Menus.HierarchyMenuCatalog.Hosts.Desktop,
                 Group = 30,
                 IconPath = "CodeEditor2/Assets/Icons/play.svg",
                 IconColor = PackColor(ThemeColor),
                 Children =
                 {
-                    new pluginVerilog.CoreBridge.HierarchyMenuCatalog.Entry
+                    new SystemVerilogCore.Menus.HierarchyMenuCatalog.Entry
                     {
                         Id = MenuRunSimulationId,
                         Label = "Run Simulation",
                         Detail = "compile and run the hierarchy with Icarus Verilog",
-                        Targets = pluginVerilog.CoreBridge.HierarchyMenuCatalog.AppliesTo.File,
-                        Hosts = pluginVerilog.CoreBridge.HierarchyMenuCatalog.Hosts.Desktop,
+                        Targets = SystemVerilogCore.Menus.HierarchyMenuCatalog.AppliesTo.File,
+                        Hosts = SystemVerilogCore.Menus.HierarchyMenuCatalog.Hosts.Desktop,
                         Group = 10,
                         IconPath = "CodeEditor2/Assets/Icons/play.svg",
                         IconColor = PackColor(ThemeColor),
-                        Action = pluginVerilog.CoreBridge.HierarchyMenuCatalog.ActionKind.DesktopHandler,
+                        Action = SystemVerilogCore.Menus.HierarchyMenuCatalog.ActionKind.DesktopHandler,
                         // Only offered when this plugin is actually loaded: the
                         // row cannot work otherwise, and the catalog is static
                         // data that cannot tell on its own.
@@ -89,7 +89,7 @@ namespace pluginIcarusVerilog
         /// carries that node, so this does not depend on the current selection
         /// (which may have moved while the menu was open).
         /// </summary>
-        private static void RunSimulation(pluginVerilog.CoreBridge.NavigateNodeMenuContext context)
+        private static void RunSimulation(SystemVerilogCore.Menus.NavigateNodeMenuContext context)
         {
             pluginVerilog.Data.VerilogFile? vFile = context.File as pluginVerilog.Data.VerilogFile;
             if (vFile == null) return;
